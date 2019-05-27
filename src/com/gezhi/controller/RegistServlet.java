@@ -30,7 +30,7 @@ public class RegistServlet extends HttpServlet{
 			String sql="insert into users(user_name,user_pwd,user_type) values('"+name+"','"+pwd+"',"+defaultType+")";
 			Statement stmt=conn.createStatement();
 			int result=stmt.executeUpdate(sql);
-			System.out.println(result);
+			System.out.println(result+"regist");
 		} catch (SQLException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

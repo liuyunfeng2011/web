@@ -33,24 +33,19 @@
 					type:"POST",
 					url:"user/checkUserName",
 					data:"name="+name,
+					async: false,
 					success: function(data){
 						if(data==1){
 							$nameMsg.text("用户名已经存在")
 						}else{
-							alert("1")
 							$nameMsg.text("用户名可以使用")
 							flag=true;
-							alert(flag+"dsadsadsa")
 						}
 					}
 				})
-				
 			}
-			alert(flag)
 			return flag
 		}
-		
-		
 		function checkPwd(){
 			var flag=false;
 			var pwd=$("#uPwd").val();
