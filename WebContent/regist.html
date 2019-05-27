@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="user/regist" id="registForm" method="post">
+		用户名:<input type="text" id="uName" name="uName"><span
+			id="nameMsg"></span><br /> 密码:<input type="password" id="uPwd"
+			name="uPwd"><span id="pwdMsg"></span><br /> <input
+			type="submit">
+	</form>
+	<!-- 1  验证表单数据-->
+	<script type="text/javascript" src="js/jquery/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript">
+		$("#uName").blur(function(){
+			checkName();
+		})
+		
+		$("#uPwd").blur(function(){
+			checkPwd();
+		})
+		
+		function checkName(){
+			var flag=false;
+			var name=$("#uName").val();
+			var $nameMsg=$("#nameMsg");
+			if(name.length==0){
+				$nameMsg.text("用户名不能为空")
+			}else{
+				$.ajax({
+					type:"POST",
+					url:"user/checkUserName",
+					data:"name="+name,
+					success: function(data){
+						if(data==1){
+							$nameMsg.text("用户名已经存在")
+						}else{
+							alert("1")
+							$nameMsg.text("用户名可以使用")
+							flag=true;
+							alert(flag+"dsadsadsa")
+						}
+					}
+				})
+				
+			}
+			alert(flag)
+			return flag
+		}
+		
+		
+		function checkPwd(){
+			var flag=false;
+			var pwd=$("#uPwd").val();
+			var $pwdMsg=$("#pwdMsg");
+			if(pwd.length==0){
+				$pwdMsg.text("用户密码不能为空")
+			}else{
+				$pwdMsg.text("用户密码正确")
+				 flag=true;
+			}
+			return flag
+		}
+		
+		$("#registForm").submit(function(){
+			if(checkName()&&checkPwd()){
+				return true
+			}else{
+				return false;
+			}
+			
+		})
+		
+		
+		
+		
+		
+		
+		
+	</script>
+</body>
+</html>
