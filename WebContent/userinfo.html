@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<button id="btn1">点我啊</button>
+<script type="text/javascript" src="js/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+	$("#btn1").click(function(){
+		$.ajax({
+			type:"POST",
+			url:"user/userInfo",
+			success:function(){
+				alert("ok")
+			}
+		})
+	})
+</script>
+</body>
+</html>

@@ -42,4 +42,15 @@
   		<url-pattern>/user/checkUserName</url-pattern>
   </servlet-mapping>
   
+  
+   <servlet>
+  	<servlet-name>userInfo</servlet-name>
+  	<servlet-class>com.gezhi.controller.UserInfoServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  		<servlet-name>userInfo</servlet-name>
+  		<url-pattern>/user/userInfo</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

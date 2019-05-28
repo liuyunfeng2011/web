@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.gezhi.pojo.User;
 
@@ -51,6 +52,9 @@ public class LoginServlet extends HttpServlet {
 				}else{
 					//登录成功
 					out.print("1");
+					//保存用户状态
+					HttpSession session=req.getSession();
+					session.setAttribute("user", user);
 				}
 			}else{
 				//帐户名/密码错误
