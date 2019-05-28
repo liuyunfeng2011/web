@@ -54,7 +54,9 @@ public class LoginServlet extends HttpServlet {
 					out.print("1");
 					//保存用户状态
 					HttpSession session=req.getSession();
+					//session.setMaxInactiveInterval(2*60*60);
 					session.setAttribute("user", user);
+					System.out.println(session.getMaxInactiveInterval());
 				}
 			}else{
 				//帐户名/密码错误

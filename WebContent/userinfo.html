@@ -5,17 +5,48 @@
 <title>Insert title here</title>
 </head>
 <body>
+昵称:<input type="text" id="nickName"><br/>
+电话:<input type="text" id="phone"><br/>
+email:<input type="text" id="email"><br/>
+性别:男:<input type="radio" name="gender" class="gender" value="1" checked="checked"> 女:<input type="radio"  name="gender" value="0" class="gender"><br/>
+地址:<input type="text" id="address"><br/>
 <button id="btn1">点我啊</button>
 <script type="text/javascript" src="js/jquery/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
 	$("#btn1").click(function(){
+		var name=$("#nickName").val()
+		var phone=$("#phone").val()
+		var email=$("#email").val()
+		var address = $("#address").val()
+		var gender
+		$(".gender").each(function(){
+			 if($(this).attr("checked")=="checked"){
+				 gender=$(this).val()
+			 }
+		})
 		$.ajax({
 			type:"POST",
+			data:"name="+name+"&phone="+phone+"&email="+email+"&gender="+gender+"&address="+address,
 			url:"user/userInfo",
-			success:function(){
-				alert("ok")
+			success:function(data){
+				if(data==1){
+					alert("ok")
+				}else if(data==0){
+					alert("服务器错误")
+				}else if(data==4){
+					window.location.href="login.html"
+				}
 			}
 		})
+		
+		
+		
+		
+		
+		//var $name=$("#nickName")
+		//var name2=document.getElementById("nickName")
+		//alert($name+"jquery对象")
+		//alert(name2+"js对象")
 	})
 </script>
 </body>
