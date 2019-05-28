@@ -5,10 +5,30 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="login" method="post">
-		username:<input type="text" id="" name="uName"/><br/>
-		pwd:<input type="password" id="" name="uPwd"/><br/>
-		<input type="submit">
-	</form>
+		username:<input type="text" id="uName"/><br/>
+		pwd:<input type="password" id="uPwd" /><br/>
+		<button id="loginBtn">点击登录</button><span id="loginMsg"></span>
+		<script type="text/javascript" src="js/jquery/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript">
+			$("#loginBtn").click(function(){
+				var uName=$("#uName").val()
+				var uPwd=$("#uPwd").val()
+				$.ajax({
+					   type: "POST",
+					   url: "user/login",
+					   data: "uName="+uName+"&uPwd="+uPwd,
+					   success: function(data){
+					     	if(data=='3'){
+					     		$("#loginMsg").text("账户/密码错误 请重试")
+					     	}else if(data=='0'){
+					     		$("#loginMsg").text("账户被禁用，请联系管理员")
+					     	}
+					     	else if(data=='1'){
+					     		window.location.href='main.html'
+					     	}
+					   }
+					});
+			})
+		</script>
 </body>
 </html>
