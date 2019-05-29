@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.gezhi.pojo.User;
+import com.gezhi.pojo.UserInfo;
 
 public class LoginServlet extends HttpServlet {
 	@Override
@@ -33,8 +34,13 @@ public class LoginServlet extends HttpServlet {
 			Class.forName("com.mysql.jdbc.Driver");
 			String url = "jdbc:mysql://127.0.0.1:3306/tb40";
 			conn = DriverManager.getConnection(url, "root", "admin");
-			String sql = "select user_id,user_name,user_type from users where user_name=? and user_pwd=?";
-			PreparedStatement ptmt = conn.prepareStatement(sql);
+			StringBuilder sb=new StringBuilder();
+			sb.append("select u.user_id,u.user_name,u.user_type,info.info_nickname ");
+			sb.append(" from users u  ");
+			sb.append(" left join user_info info ");
+			sb.append(" on u.user_id=info.user_id ");
+			sb.append(" where u.user_name=? and u.user_pwd=? " );
+			PreparedStatement ptmt = conn.prepareStatement(sb.toString());
 			ptmt.setString(1, name);
 			ptmt.setString(2, pwd);
 			ResultSet rs= ptmt.executeQuery();
@@ -44,6 +50,9 @@ public class LoginServlet extends HttpServlet {
 				String userName=rs.getString("user_name");
 				int userType=rs.getInt("user_type");
 				user=new User(userId,userName,userType);
+				UserInfo info=new UserInfo();
+				info.setNickName(rs.getString("info_nickname"));
+				user.setUserInfo(info);
 			}
 			if(user!=null){
 				if(user.getUserType()==0){
@@ -56,7 +65,6 @@ public class LoginServlet extends HttpServlet {
 					HttpSession session=req.getSession();
 					//session.setMaxInactiveInterval(2*60*60);
 					session.setAttribute("user", user);
-					System.out.println(session.getMaxInactiveInterval());
 				}
 			}else{
 				//’ ªß√˚/√‹¬Î¥ÌŒÛ

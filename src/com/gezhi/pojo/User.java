@@ -1,6 +1,7 @@
 package com.gezhi.pojo;
 
 import java.io.Serializable;
+import java.util.List;
 /**
  * 用户类
  * @author Liuyf
@@ -34,6 +35,7 @@ public class User implements Serializable{
 	private String userPwd;
 	//用户状态 1-正常  0-禁止登录
 	private Integer userType;
+	private UserInfo userInfo;
 	public Integer getUserId() {
 		return userId;
 	}
@@ -58,10 +60,17 @@ public class User implements Serializable{
 	public void setUserType(Integer userType) {
 		this.userType = userType;
 	}
+	
+	public UserInfo getUserInfo() {
+		return userInfo;
+	}
+	public void setUserInfo(UserInfo userInfo) {
+		this.userInfo = userInfo;
+	}
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", userName=" + userName + ", userPwd=" + userPwd + ", userType=" + userType
-				+ "]";
+				+ ", userInfo=" + userInfo + "]";
 	}
 	
 }

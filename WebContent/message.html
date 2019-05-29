@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<!-- 定义样式 -->
+		<style>
+			.success{
+			background-image: url("Plugins/checked.gif");
+			background-color:#E6FEE4;
+            border-color:#01BE00;
+            background-repeat: no-repeat;
+            background-position: left 2px;
+            padding:0 18px;
+        }
+       .danger{
+            background-image: url("Plugins/unchecked.gif");
+            background-color:#FFF2E5;
+            border-color:#FF3300;
+            background-repeat: no-repeat;
+            background-position: left 2px;
+            padding:0 18px;
+        }
+         label{
+            width: 150px;
+            height: 30px;
+           line-height: 30px;
+           text-align: right;
+            font-size: 14px;
+            display: inline-block;
+        }
+        span{
+            background-color:#FFFFDA ;
+            border: 1px solid #FFCD00;
+            font-size: 12px;
+            height: 20px;
+            line-height: 20px;
+            display: inline-block;
+            margin-left: 40px ;
+        }
+        .button{
+            margin-left: 159px;
+            border: dashed 1px transparent;
+            background-color: transparent;
+            cursor: pointer;
+        }
+</style>
+	</head>
+	<body>	
+			<p> <label for="userName">用户名：</label> <input type="text" id="userName" size="13px" ><span id="userNameTitle"
+				 style="margin-left:19px">请输入4-12位用户名（首位为字母）</span> </p>
+			<!-- <p> <label for="password">登录密码：</label> <input type="password" id="password"><span id="passwordTitle">密码为6-16位</span>
+			</p>
+			<p> <label for="repassword">重复登录密码：</label> <input type="password" id="repassword"><span id="repasswordTitle">请再次输入密码</span>
+			</p> -->
+			<p> <label for="sex">性别：</label>
+			<input class="gender" type="radio" checked="checked" name="sex" value="0">男
+			<input class="gender" type="radio" name="sex" value="1">女</p>
+			<p> <label for="tel">关联手机号:</label> <input type="text" id="tel" ><span id="telTitle">请输入关联手机号</span> </p>
+			<p> <label for="address">关联地址:</label> <input type="text" id="address" ><span id="telTitle">请输入地址</span> </p>
+			<p> <label for="email">保密邮箱：</label> <input type="text" id="email" ><span id="emailTitle">请输入保密邮箱</span> </p>
+			<p class="button"> <input type="button" id="messagebtn" value="保存" /> <input type="reset" value="清空" /> </p>
+			<button id="messagebtn2">btn2</button>
+	</body>
+</html>
+
+<!-- 引入Jquery标签库 -->
+<!--<script type="text/javascript" src="js/jquery/jquery-1.7.2.min.js"></script>-->
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+</script> 
+<script>
+	$("#messagebtn2").click(function() {
+		usermessage();
+	})
+	function usermessage(){
+		$(".gender").each(function(){
+			alert($(this).prop("checked"))
+
+		})
+	}
+		
+</script>

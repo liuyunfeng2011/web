@@ -1,3 +1,11 @@
 点击主页，显示所有用户信息 包含 用户名 状态、昵称 邮箱
 
 查询user 顺便查询userinfo的信息
+
+checked, selected 或者 disabled 使用prop()，其他的使用 attr()
+
+
+
+1：用户管理界面：所有用户信息全部显示出来 table 50%
+2：完成这些用户的 CRUD 增删改查 条件查询 排序查询 禁用操作  0
+

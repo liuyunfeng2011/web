@@ -1,60 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
-  <display-name>myweb01</display-name>
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
-  </welcome-file-list>
-  
-  <!--  <session-config>
-  	<session-timeout>40</session-timeout>
-  </session-config>-->
-  <servlet>
-  	<servlet-name>loginServlet</servlet-name>
-  	<servlet-class>com.gezhi.controller.LoginServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  	<servlet-name>loginServlet</servlet-name>
-  	<url-pattern>/user/login</url-pattern>
-  </servlet-mapping>
-  
-  
-  
-  <!-- 注册servlet -->
-  
-  <servlet>
-  	<servlet-name>userResgist</servlet-name>
-  	<servlet-class>com.gezhi.controller.RegistServlet</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-  		<servlet-name>userResgist</servlet-name>
-  		<url-pattern>/user/regist</url-pattern>
-  </servlet-mapping>
-  
-   <servlet>
-  	<servlet-name>checkUserName</servlet-name>
-  	<servlet-class>com.gezhi.controller.CheckUserNameServlet</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-  		<servlet-name>checkUserName</servlet-name>
-  		<url-pattern>/user/checkUserName</url-pattern>
-  </servlet-mapping>
-  
-  
-   <servlet>
-  	<servlet-name>userInfo</servlet-name>
-  	<servlet-class>com.gezhi.controller.UserInfoServlet</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-  		<servlet-name>userInfo</servlet-name>
-  		<url-pattern>/user/userInfo</url-pattern>
-  </servlet-mapping>
-  
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>myweb01</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+	<!-- <session-config> <session-timeout>40</session-timeout> </session-config> -->
+	<servlet>
+		<servlet-name>loginServlet</servlet-name>
+		<servlet-class>com.gezhi.controller.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>loginServlet</servlet-name>
+		<url-pattern>/user/login</url-pattern>
+	</servlet-mapping>
+
+
+
+	<!-- 注册servlet -->
+
+	<servlet>
+		<servlet-name>userResgist</servlet-name>
+		<servlet-class>com.gezhi.controller.RegistServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>userResgist</servlet-name>
+		<url-pattern>/user/regist</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>checkUserName</servlet-name>
+		<servlet-class>com.gezhi.controller.CheckUserNameServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>checkUserName</servlet-name>
+		<url-pattern>/user/checkUserName</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<servlet-name>userInfo</servlet-name>
+		<servlet-class>com.gezhi.controller.UserInfoServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>userInfo</servlet-name>
+		<url-pattern>/user/userInfo</url-pattern>
+	</servlet-mapping>
+
+
+
+	<servlet>
+		<servlet-name>UserNickName</servlet-name>
+		<servlet-class>com.gezhi.controller.UserNickNameServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UserNickName</servlet-name>
+		<url-pattern>/user/getNickName</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>user</servlet-name>
+		<servlet-class>com.gezhi.controller.UserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>user</servlet-name>
+		<url-pattern>/users/*</url-pattern>
+	</servlet-mapping>
+	
+
 </web-app>

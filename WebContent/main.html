@@ -5,8 +5,59 @@
 <title>Insert title here</title>
 </head>
 <body>
-	欢迎你<span id="nickName"></span>
-	hello main<a href="userinfo.html">用户信息</a>
-	<script type="text/javascript"></script>
+	欢迎你
+	<span id="nickName"></span> <br/>
+	<span id="phone"></span> <br/>
+	hello main
+	<a href="userinfo.html">用户信息</a>
+	<button id="delBtn" onclick="deleteuser()">delete</button>
+	<button id="upBtn" onclick="updateeuser()">update</button>
+	<button id="getPhoneBtn" onclick="getPhone()">getPhone</button>
+	<script type="text/javascript" src="js/jquery/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			getInit();
+		})
+		function getInit() {
+			$.ajax({
+				type : "get",
+				url : "user/getNickName",
+				success : function(data) {
+					 var users=$.parseJSON(data)
+					for(var i=0;i<users.length;i++){
+						alert(users[0].userName)
+					}
+				}
+			})
+		}
+		function deleteuser(){
+			$.ajax({
+				type : "post",
+				url : "users/delete",
+				success : function(data) {
+					alert(data)
+				}
+			})
+		}
+		function updateeuser(){
+			$.ajax({
+				type : "post",
+				url : "users/update",
+				success : function(data) {
+					alert(data)
+				}
+			})
+		}
+		function getPhone(){
+			$.ajax({
+				type : "get",
+				url : "users/getPhone",
+				success : function(data) {
+					alert(data)
+				}
+			})
+		}
+	</script>
 </body>
 </html>
+<!-- 休息 -->
