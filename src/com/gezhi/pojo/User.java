@@ -33,7 +33,7 @@ public class User implements Serializable{
 	private String userName;
 	//用户密码
 	private String userPwd;
-	//用户状态 1-正常  0-禁止登录
+	//用户状态 1-正常  0-禁止登录    3-删除
 	private Integer userType;
 	private UserInfo userInfo;
 	public Integer getUserId() {

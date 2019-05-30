@@ -5,7 +5,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<table>
+	<table id="userInfo">
 		<tr>
 			<td>id</td>
 			<td>姓名</td>
@@ -16,17 +16,47 @@
 			<td>地址</td>
 			<td>操作</td>
 		</tr>
-		<tr>
-			<td>1</td>
-			<td>zhangsan</td>
-			<td>xiaohei</td>
-			<td>13333333</td>
-			<td>email@email.com</td>
-			<td>男</td>
-			<td>成都</td>
-			<td>删除</td>
-			<td><button>禁用</button><button>删除</button></td>
-		</tr>
 	</table>
+	<script type="text/javascript" src="js/jquery/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			userInfoInit()
+		})
+		function userInfoInit(){
+			$.ajax({
+				type:"get",
+				url:"users/findAllUser",
+				success:function(data){
+					var users=$.parseJSON(data)
+					var uTr
+					for(var i=0;i<users.length;i++){
+						var uTd="<tr><td>"+users[i].userId+"</td><td>"+users[i].userName+"</td>"
+						+"<td>"+users[i].userInfo.nickName+"</td><td>"+users[i].userInfo.phone+"</td>"
+						+"<td>"+users[i].userInfo.email+"</td><td>"+users[i].userInfo.gender+"</td>"
+						+"<td>"+users[i].userInfo.address+"</td><td><button class='delUser' >删除</button><button class='disUser' >禁用</button></td></tr>"
+						uTr+=uTd
+					}
+					$("#userInfo").append(uTr)
+				}
+			})
+		}
+		$(".delUser").live("click",function(){
+			var id=$(this).parent().parent().children().first().text()
+			$.ajax({
+				type:"post",
+				url:"users/delUser",
+				data:"userId="+id,
+				success:function(msg){
+					if(msg=="-100"){
+						//服务器错误
+					}else if(msg=="1"){
+						//操作成功
+						//刷新表格						
+					}
+				}
+			})
+		})
+		//jquery 
+	</script>
 </body>
 </html>
