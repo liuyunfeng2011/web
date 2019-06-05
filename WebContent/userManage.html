@@ -5,8 +5,10 @@
 <title>Insert title here</title>
 </head>
 <body>
+<div>
 	<table id="userInfo">
 		<tr>
+			<td><span>全选</span><input type="checkbox"  id="checkAll" /> </td>
 			<td>id</td>
 			<td>姓名</td>
 			<td>昵称</td>
@@ -17,31 +19,153 @@
 			<td>操作</td>
 		</tr>
 	</table>
+	<button id="firstPagBtn">首页</button><button id="prePagBtn">上一页</button>
+	<span id="pageTab"></span><button id="nextPagBtn">下一页</button>
+	<input type="text" id="pageInput"><button id="serchBtn">点击</button>
+	<button id="lastPagBtn">尾页</button><button id="delUsersBtn">删除</button>
+</div>
 	<script type="text/javascript" src="js/jquery/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript">
+	var pageNowNum=0;
+	var pageCount=0;
 		$(function(){
-			userInfoInit()
+			getPageCount();
+			findUserByPage(1)
 		})
-		function userInfoInit(){
-			$.ajax({
-				type:"get",
-				url:"users/findAllUser",
-				success:function(data){
-					var users=$.parseJSON(data)
-					var uTr
-					for(var i=0;i<users.length;i++){
-						var uTd="<tr><td>"+users[i].userId+"</td><td>"+users[i].userName+"</td>"
-						+"<td>"+users[i].userInfo.nickName+"</td><td>"+users[i].userInfo.phone+"</td>"
-						+"<td>"+users[i].userInfo.email+"</td><td>"+users[i].userInfo.gender+"</td>"
-						+"<td>"+users[i].userInfo.address+"</td><td><button class='delUser' >删除</button><button class='disUser' >禁用</button></td></tr>"
-						uTr+=uTd
-					}
-					$("#userInfo").append(uTr)
+		$("#checkAll").on("click",function(){
+			var flag=$(this).prop("checked")
+			$(".userCheckBox").prop("checked",flag)
+		})
+		$(".userCheckBox").live("click",function(){
+			//alert($(this).prop("checked"))
+			//$("#checkAll").prop("checked",$(this).prop("checked"))
+			//条件
+			if(!$(this).prop("checked")){
+				$("#checkAll").prop("checked",false)
+			}else{
+				//1:判断所有人是不是都被选中了
+					//如果是：全选按钮选中 
+					//如果非:不被选中
+					var flag=true
+				var $cheBoxes=$(".userCheckBox")
+				$cheBoxes.each(function(){
+					flag=$(this).prop("checked")&&flag
+				})
+				if(flag){
+					$("#checkAll").prop("checked",true)
 				}
-			})
+			}
+			
+			
+			
+			
+		})
+		
+		
+		
+		$("#delUsersBtn").on("click",function(){
+				var arr=[]
+				var $cheBoxes=$(".userCheckBox")
+				var index=0
+				$cheBoxes.each(function(){
+					if($(this).prop("checked")){
+						var value=$(this).val()
+						arr[index]=value
+						index++
+					}
+					
+				})
+				alert(arr)
+		})
+		
+		
+		$("#serchBtn").on("click",function(){
+			var num=$("#pageInput").val()
+			if(num<1||num>pageCount){
+				//只要是不正常情况  包括用户输入文字  负数、大于总页数
+				findUserByPage(1)
+			}else{
+				findUserByPage(num)
+			}
+		})
+		$("#prePagBtn").on("click",function(){
+			if(pageNowNum!=1){
+				var num=pageNowNum-1
+				findUserByPage(num)
+			}
+			
+		})
+		$("#nextPagBtn").on("click",function(){
+			if(pageNowNum!=pageCount){
+				var num=pageNowNum+1
+				findUserByPage(num)
+			}
+		})
+		
+		
+		
+		
+		$("#firstPagBtn").on("click",function(){
+			//点击首页 --跳到首页       页数第一个
+			findUserByPage(1)
+		})
+		$("#lastPagBtn").on("click",function(){
+			findUserByPage(pageCount)
+		})
+		
+		$(".pageBtn").live("click",function(){
+			var pageNum=$(this).html()
+			findUserByPage(pageNum)
+		})
+		function getPageCount(){
+				$.ajax({
+					type:"get",
+					url:"users/getPageCount",
+					success:function(data){
+						if(data=="-100"){
+							$("#pageTab").html("服务器异常")
+						}else{
+							pageCount=data;
+							var btnData="";
+							for(var i=0;i<data;i++){
+								btnData+="<button class='pageBtn'>"+(i+1)+"</button>"
+							}
+							$("#pageTab").append(btnData)
+						}
+					}
+				})
+		}
+		function findUserByPage(pageNow){
+			if(pageNowNum!=pageNow){
+				pageNowNum=pageNow
+				$.ajax({
+					type:"get",
+					url:"users/findUserByPage",
+					data:"pageNow="+pageNow,
+					success:function(data){
+						$("#userInfo tr:gt(0)").remove()
+						//清空原来表格中的数据
+						//var result=$.parseJSON(data)
+						//alert(result.pageCount)
+						//alert(result.users)
+						var users=$.parseJSON(data)
+						var uTr=""
+						for(var i=0;i<users.length;i++){
+							var uTd="<tr><td><input type='checkbox' value='"+users[i].userId+"' class='userCheckBox'/></td><td>"+(i+1)+"</td><td>"+users[i].userName+"</td>"
+							+"<td>"+users[i].userInfo.nickName+"</td><td>"+users[i].userInfo.phone+"</td>"
+							+"<td>"+users[i].userInfo.email+"</td><td>"+users[i].userInfo.gender+"</td>"
+							+"<td>"+users[i].userInfo.address+"</td><td><button class='delUser' >删除</button><button class='disUser' >禁用</button></td></tr>"
+							uTr+=uTd
+						}
+						$("#userInfo").append(uTr)
+					}
+				})
+			}
+			
 		}
 		$(".delUser").live("click",function(){
-			var id=$(this).parent().parent().children().first().text()
+			var id=$(this).parent().parent().children().first().children().first().val()
+			var $delTr=$(this).parent().parent()
 			$.ajax({
 				type:"post",
 				url:"users/delUser",
@@ -50,8 +174,7 @@
 					if(msg=="-100"){
 						//服务器错误
 					}else if(msg=="1"){
-						//操作成功
-						//刷新表格						
+							$delTr.remove()
 					}
 				}
 			})

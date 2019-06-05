@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+</style>
+</head>
+<body>
+<script type="text/javascript" src="js/jquery/jquery-3.3.1.min.js"></script>
+
+<button id="btn1">淡出</button>
+<button id="btn2">淡如</button>
+<div id="showDiv" style="height: 120px;width: 120px;background-color: red"></div>
+<script type="text/javascript">
+      $(function(){
+    	  
+      })
+      $("#btn1").on("click",function(){
+    	   $("#showDiv").fadeToggle(3000,function(){
+    	  alert("ok")
+      })
+      })
+    
+</script>
+</body>
+</html>

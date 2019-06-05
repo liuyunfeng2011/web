@@ -2,7 +2,9 @@ package com.gezhi.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,9 +34,24 @@ public class UserServlet extends HttpServlet{
 		}else if("getPhone".equals(path)){
 			//获取用户电话
 			out.println("getPhone user++++");
-		}else if("findAllUser".equals(path)){
+		}else if("getPageCount".equals(path)){
+			int pageCount=0;
 			try {
-				List<User> users=dao.findAllUser();
+				pageCount=dao.getPageCount();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				out.print("-100");
+			}
+			out.print(pageCount);
+		}else if("findUserByPage".equals(path)){
+			try {
+				int pageNow=Integer.parseInt(req.getParameter("pageNow"));
+				List<User> users=dao.findUserByPage(pageNow);
+//				int pageCount=3;
+//				Map<String, Object> map=new HashMap<>();
+//				map.put("pageCount", pageCount);
+//				map.put("users", users);
 				String userList= mapper.writeValueAsString(users);
 				out.print(userList);
 			} catch (Exception e) {

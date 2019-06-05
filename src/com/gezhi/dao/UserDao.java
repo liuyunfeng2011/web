@@ -19,13 +19,47 @@ import com.gezhi.util.DbUtil;
 public class UserDao {
 	//设置用户状态为禁用
 	static final int USER_TYPE_DELETE=3;
+	static final int PAGE_SIZE=5;
+	//查询总页数
+	public int getPageCount() throws Exception{
+		int pageCount=0;
+		StringBuilder sb=new StringBuilder();
+		sb.append("SELECT count(*) as count ");
+		sb.append(" from users u ");
+		sb.append(" left join user_info info ");
+		sb.append(" on u.user_id=info.user_id WHERE user_type!=3");
+		// 数据size
+		// pagecount
+		Connection conn=DbUtil.getConnection();
+		Statement stmt=conn.createStatement();
+		ResultSet rs= stmt.executeQuery(sb.toString());
+		if(rs.next()){
+			int rowCount=rs.getInt("count");
+			pageCount=rowCount%PAGE_SIZE==0?rowCount/PAGE_SIZE:rowCount/PAGE_SIZE+1; 
+			
+		}
+		DbUtil.closeConnection(conn);
+		return pageCount;
+	}
+	public static void main(String[] args) {
+		UserDao dao=new UserDao();
+		try {
+			System.out.println(dao.findUserByPage(2));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * @throws Exception 
 	 * 查询所有用户
 	 * @return 查询到的所有用户的信息
 	 * @throws  
 	 */
-	public List<User> findAllUser() throws Exception  {
+	public List<User> findUserByPage(int pageNow) throws Exception  {
+		//计算limit分页相关参数
+		int limitNum=(pageNow-1)*PAGE_SIZE;
 		List<User> users=new ArrayList<>();
 		//mysql
 		Connection conn=DbUtil.getConnection();
@@ -34,9 +68,13 @@ public class UserDao {
 		sb.append(" info.info_gender,info.info_address ");
 		sb.append(" from users u ");
 		sb.append(" left join user_info info ");
-		sb.append(" on u.user_id=info.user_id WHERE user_type!=3");
-		Statement stmt=conn.createStatement();
-		ResultSet rs=stmt.executeQuery(sb.toString());
+		sb.append(" on u.user_id=info.user_id WHERE user_type!=3 limit ?,?");
+//		Statement stmt=conn.createStatement();
+//		ResultSet rs=stmt.executeQuery(sb.toString());
+		PreparedStatement ptmt=conn.prepareStatement(sb.toString());
+		ptmt.setInt(1, limitNum);
+		ptmt.setInt(2, PAGE_SIZE);
+		ResultSet rs=ptmt.executeQuery();
 		User user=null;
 		while(rs.next()){
 			user=new User();
@@ -67,13 +105,7 @@ public class UserDao {
 		stmt.setInt(2, userId);
 		stmt.executeUpdate();
 	}
-	public static void main(String[] args) {
-		UserDao dao=new UserDao();
-		try {
-			System.out.println(dao.findAllUser());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
+	
+	
 }
