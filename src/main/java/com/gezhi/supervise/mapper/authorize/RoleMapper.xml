@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gezhi.supervise.mapper.authorize.RoleMapper">
+    <resultMap id="roleMapper" type="com.gezhi.supervise.pojo.authorize.Role">
+        <id column="role_id" property="roleId" javaType="int" />
+        <result column="role_name" property="roleName" javaType="java.lang.String" />
+        <result column="role_sign" property="roleSign" javaType="java.lang.String" />
+        <result column="description" property="description" javaType="java.lang.String" />
+    </resultMap>
+    <select id="selectRolesByUserId" resultMap="roleMapper"  >
+		 SELECT r.* FROM role r LEFT JOIN user_role ur ON r.role_id = ur.role_id
+        WHERE ur.user_id = #{id}   
+    </select>
+</mapper>

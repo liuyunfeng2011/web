@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gezhi.supervise.mapper.authorize.PermissionMapper">
+	<resultMap id="permissionMapper" type="com.gezhi.supervise.pojo.authorize.Permission">
+		<id column="permission_id" property="permissionId" javaType="int" />
+		<result column="permission_name" property="permissionName"
+			javaType="java.lang.String" />
+		<result column="permission_sign" property="permissionSign"
+			javaType="java.lang.String" />
+		<result column="description" property="description" javaType="java.lang.String" />
+	</resultMap>
+	<select id="selectPermissionsByRoleId" resultMap="permissionMapper">
+		SELECT p.* FROM permission p LEFT JOIN role_permission rp ON
+		rp.permission_id = p.permission_id
+		WHERE rp.role_id =
+		#{id}
+	</select>
+</mapper>

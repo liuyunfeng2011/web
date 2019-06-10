@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+ 
+	<description>apache shiro配置</description>
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<!-- 身份认证失败 -->
+	   <property name="loginUrl" value="/login.do" />
+		<!--controller中控制 <property name="successUrl" value="/main.jsp"/> -->
+		<!-- 权限认证失败 /401.jsp-->
+		<property name="unauthorizedUrl" value="/401.jsp" />
+		<property name="filterChainDefinitions">
+			<value>
+				/css/** =anon
+				/fonts/** =anon
+				/img/** =anon
+				/js/** =anon
+				/login.do = anon
+				<!--  
+				/MP_verify_7ZrMvZQmrpTGkcjT.txt =anon
+				/authorize/receive.do = anon
+				/authorize/receiveWX.do = anon
+				/authorize/**/receiveWX.do = anon
+				/authorize/authorizeWxInvoke.do = anon
+				/user/setForgetPwd.do = anon
+				/user/sendSms.do = anon
+				/pages/password.html= anon
+				/user/checkUserName.do= anon-->
+				<!--  /** = anon
+				/user/getUserList.do=perms["user:manger"]
+				/role/getRoleList.do=perms["role:manger"]
+				/dept/getDeptList.do=perms["dept:manger"]
+				/conf/findAallCategoryList.do=perms["type:manger"]
+				/conf/findAallEventClassList.do=perms["type:manger"]
+				/conf/getExtent.do=perms["type:manger"]
+				/intelligent/pagingForAllIntelligent.do=perms["intelligence:manger"]
+				/sensitive/getSensitiveList.do=perms["sensitive:manger"]
+				/statistics/getMessageStatistics.do=perms["data:contro"]
+				/statistics/getUnhandledMsgGroupByEventCount=perms["data:contro"]
+				/log/findLogList.do=perms["visit:manger"]
+				/log/getIpList.do=perms["ip:manger"]
+				/** = authc-->
+				<!-- 登录页允许访问 /login.html = anon /login.do = anon    /**=anon-->
+				<!-- 其他资源需要认证 为了前端测试，暂时关闭所有权限 /editUser.html=perms["user:edit"] /** = 
+					 /role/** = roles[admin]   authc -->
+			</value>
+		</property>
+	</bean>
+
+	<!-- 缓存管理器 使用Ehcache实现 -->
+	<bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml" />
+	</bean>
+
+	<!-- 会话DAO -->
+	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.MemorySessionDAO" />
+
+	<!-- 会话管理器 -->
+	<bean id="sessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="sessionDAO" ref="sessionDAO" />
+		<property name="globalSessionTimeout" value="21600000" /><!-- 会话有效时间30分钟 -->
+		<property name="deleteInvalidSessions" value="true" />
+		<property name="sessionValidationSchedulerEnabled" value="true" />
+		<property name="sessionValidationScheduler" ref="sessionValidationScheduler" />
+	</bean>
+	<bean id="sessionValidationScheduler"
+		class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
+		<property name="sessionValidationInterval" value="1800000" />
+	</bean>
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realms">
+			<list>
+				<ref bean="userRealm" />
+			</list>
+		</property>
+		<!-- 设置缓存管理器为 ehcache -->
+    <property name="cacheManager" ref="shiroEhcacheManager"></property> 
+		<!-- 配置sessionManager，提供session管理 -->
+     <property name="sessionManager" ref="sessionManager"></property>
+	</bean>
+
+	<!-- Shiro生命周期处理器 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+</beans>

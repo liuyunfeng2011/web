@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	http://www.springframework.org/schema/mvc   
+	http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
+	<mvc:annotation-driven />
+
+	<context:component-scan base-package="com.gezhi.supervise.controller" />
+
+
+	<!-- 读取 db.properties配置文件 -->
+	<context:property-placeholder location="classpath:systemSetting.properties" />
+	<!-- 上传路径 -->
+	<mvc:resources mapping="/upload/**" location="${image.mapping.path}"/>
+	
+	<!-- 静态文件放行 -->
+	<mvc:resources mapping="/js/**" location="/js/"/>
+	<mvc:resources mapping="/img/**" location="/img/"/>
+	<mvc:resources mapping="/css/**" location="/css/"/>
+	<mvc:resources mapping="/pages/**" location="/pages/"/>
+
+
+
+	<!-- ViewResolver视图解析器 用于将返回的ModelAndView对象进行分离 -->
+	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+	
+	<!-- jackson的使用 -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="mappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+	<bean id="mappingJacksonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/html;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<!-- 开启shiro的注解支持-只能配置在这个文件里 -->
+	<bean id="defaultAdvisorAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+		<!-- 必须改为true，即使用cglib方式为Action创建代理对象。默认值为false，使用JDK创建代理对象，会造成问题 -->
+		<property name="proxyTargetClass" value="true"></property>
+	</bean>
+
+	<!-- 使用shiro框架提供的切面类，用于创建代理对象 -->
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"></bean>
+	
+	
+	<!-- 文件上传相关 -->
+	 <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">   
+        <!-- 指定所上传文件的总大小不能超过"5242880"。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->  
+        <property name="maxUploadSize" value="-1"/>   
+    </bean>
+
+
+</beans>
