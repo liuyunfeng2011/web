@@ -1,15 +1,15 @@
-/target/
-/.settings
+.idea
 .classpath
 .project
-*.class
+*.iml
+*.eml
 target
-# ignore eclipse files
-.project
-.classpath
-.settings
-.metadata
-# ignore the gitignore
-.gitignore
-
-标签: git ignor
+*.log
+*.log.*
+**/resources/zheng-admin
+generatorConfig.xml
+.DS_Store
+*.cache
+*.lock
+/build/
+*.settings
