@@ -73,11 +73,23 @@
 		class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
 		<property name="sessionValidationInterval" value="1800000" />
 	</bean>
+	<!-- 自定义Realm -->
+    <bean id="MD5Realm" class="com.gezhi.supervise.shiro.UserRealm">
+       <!-- 更改自定义Realm的默认credentialsMatcher属性-->
+       <property name="credentialsMatcher" >
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <!--指定加密算法-->
+                <property name="hashAlgorithmName" value="MD5"></property>
+                <!--设置加密次数-->
+                <property name="hashIterations" value="1024"></property>
+            </bean>
+        </property> 
+    </bean>
 	<!-- 安全管理器 -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realms">
 			<list>
-				<ref bean="userRealm" />
+				<ref bean="MD5Realm" />
 			</list>
 		</property>
 		<!-- 设置缓存管理器为 ehcache -->

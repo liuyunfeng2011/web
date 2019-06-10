@@ -9,13 +9,17 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.Cache;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.stereotype.Component;
 
 import com.gezhi.supervise.pojo.User;
@@ -24,8 +28,9 @@ import com.gezhi.supervise.pojo.authorize.Role;
 import com.gezhi.supervise.service.UserService;
 import com.gezhi.supervise.service.authorize.PermissionService;
 import com.gezhi.supervise.service.authorize.RoleService;
+import com.gezhi.supervise.util.BaseParaUtil;
 import com.gezhi.supervise.util.ResultCode;
-@Component("userRealm")
+//@Component("userRealm")
 public class UserRealm extends AuthorizingRealm{
 	@Resource(name="userService")
 	private UserService userService;
@@ -33,6 +38,8 @@ public class UserRealm extends AuthorizingRealm{
 	private RoleService roleService;
 	@Resource(name="permissionService")
 	private PermissionService permissionService;
+	@Resource(name="baseParaUtil")
+	private BaseParaUtil baseParaUtil;
 	//为当前用户授权
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -53,21 +60,21 @@ public class UserRealm extends AuthorizingRealm{
 	}
 	//验证当前的用户doGetAuthorizationInfo
 	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-		String name=(String) token.getPrincipal();
-		String pwd=new String((char[])token.getCredentials());
-		User user= userService.authentication(new User(name,pwd));
-		if(user==null){
-			//用户名/密码不匹配
-			throw new AuthenticationException(ResultCode.LOGIN_FAIL.msg());
-		}else if(user.getUserType()==0){
-			//账户已被禁用
-			throw new DisabledAccountException(ResultCode.ACCOUNT_LOCK.msg());
-		}
-			//根据取得的值构建authorizationInfo对象
-		System.out.println(name);
-			SimpleAuthenticationInfo authorizationInfo=new SimpleAuthenticationInfo(name,pwd,getName());
-			return authorizationInfo;
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+			UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+			User user= userService.getUserByName(token.getUsername());
+			if(user==null){
+				//没有改用户也这样提示
+				//用户名/密码不匹配
+				throw new AuthenticationException(ResultCode.LOGIN_FAIL.msg());
+			}else if(user.getUserType()==0){
+				//账户已被禁用
+				throw new DisabledAccountException(ResultCode.ACCOUNT_LOCK.msg());
+			}
+			 ByteSource credentialsSalt =ByteSource.Util.bytes(baseParaUtil.getSalt());
+				//根据取得的值构建authorizationInfo对象
+			 SimpleAuthenticationInfo authorizationInfo=new SimpleAuthenticationInfo(user.getUserName(),user.getUserPwd(),credentialsSalt,getName());
+			 return authorizationInfo;
 	}
 
 	/** 

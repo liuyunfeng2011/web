@@ -3,6 +3,7 @@ package com.gezhi.supervise.controller;
 import javax.annotation.Resource;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -29,7 +30,10 @@ public class UserCotroller {
 			//md5加密密码 需要补充
 			subject.login(new UsernamePasswordToken(name, pwd));
 			User user=userService.getUserByName(name);
-		} catch (Exception e) {
+		}catch(IncorrectCredentialsException ice){
+			System.out.println("用户名/密码不正确");
+		}
+		catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(e);
