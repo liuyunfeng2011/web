@@ -1,30 +1,15 @@
-HELP.md
 /target/
-!.mvn/wrapper/maven-wrapper.jar
-
-### STS ###
-.apt_generated
+/.settings
 .classpath
-.factorypath
 .project
+*.class
+target
+# ignore eclipse files
+.project
+.classpath
 .settings
-.springBeans
-.sts4-cache
+.metadata
+# ignore the gitignore
+.gitignore
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-/build/
-
-### VS Code ###
-.vscode/
-
+标签: git ignor
