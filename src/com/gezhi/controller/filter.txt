@@ -1,0 +1,56 @@
+1：作用域
+ServletContext（上下文）
+HttpSession（会话）
+ServletRequest（请求）
+
+
+过滤器
+一个中间组件，用于拦截源数据和目的数据之间的消息 
+过滤二者之间传递的数据 
+
+驻留在Web服务器上的Web组件
+过滤从客户端传递到服务器端的请求和响应 
+(在Web应用程序中部署过滤器，对客户端和目标资源来说都是透明的，他们并不需要知道过滤器的存在。
+)
+过滤器的一些常见应用：
+1：认证过滤：对用户请求进行统一的认证。
+2：登录和审核过滤：对用户的访问请求进行记录和审核。
+3：图像转换过滤：转换图像格式。
+4：数据压缩过滤 ：对用户发生的数据进行压缩，从而减少传输量。
+5：加密过滤：对请求和响应进行加密解密处理。  https
+
+所有的过滤器必须实现javax.servlet.Filter接口 
+
+
+在部署文件web.xml中添加过滤器的注册与映射
+<!—指定过滤器名和过滤器类-->
+         <filter>
+            <filter-name>HelloWorldFilter</filter-name>
+            <filter-class>com.wode.HelloWorldFilter</filter-class>
+         </filter>
+         <!-- 将过滤器与URL模式关联-->
+         <filter-mapping>
+            <filter-name>HelloWorldFilter</filter-name>
+            <url-pattern>/filter/*</url-pattern>
+         </filter-mapping>
+
+
+
+doFilter(ServletRequest, ServletResponse)
+我们从一个过滤器对象的doFilter()方法中调用此方法，以继续过滤器链的传递过程。它会将控制转到链中的下一个组件。
+
+
+过滤器链
+<filter-mapping>
+      <filter-name>FilterA</filter-name>
+      <servlet-name>AServlet</servlet-name>
+</filter-mapping> 
+<filter-mapping>
+      <filter-name>FilterB</filter-name>
+      <url-pattern>*.test</url-pattern>
+</filter-mapping>
+<servlet-mapping>
+      <servlet-name>FilterC</servlet-name>
+      <url-pattern>*.test</url-pattern>
+ </servlet-mapping>
+

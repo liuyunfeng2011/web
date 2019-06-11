@@ -41,10 +41,32 @@ public class UserDao {
 		DbUtil.closeConnection(conn);
 		return pageCount;
 	}
+	
+	
+	/**
+	 * 批量删除用户(后期可以替代单独删除)
+	 *  USER_TYPE_DELETE-删除状态-3
+	 * @param ids 需要删除的用户ID-数组
+	 * @throws Exception 
+	 */
+	public void delUsersById(String [] ids) throws Exception{
+		StringBuilder sb=new StringBuilder("update users set user_type= ? ");
+		sb.append(" where user_id in ( ");
+		for(int i=0;i<ids.length;i++){
+			sb.append(ids[i]+",");
+		}
+		sb.deleteCharAt(sb.length()-1);
+		sb.append("  )");
+		Connection conn=DbUtil.getConnection();
+		PreparedStatement ptmt=conn.prepareStatement(sb.toString());
+		ptmt.setInt(1, USER_TYPE_DELETE);
+		//ptmt.setString(2, ids.toString());
+		ptmt.executeUpdate();
+	}
 	public static void main(String[] args) {
 		UserDao dao=new UserDao();
 		try {
-			System.out.println(dao.findUserByPage(2));
+			System.out.println(dao.getUserByUserName("zhangsan"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -94,6 +116,7 @@ public class UserDao {
 	
 	/**
 	 * 删除/禁用某个用户
+	 * USER_TYPE_DELETE-删除状态-3
 	 * @param userId 需要操作的用户ID
 	 * @throws Exception 
 	 */
@@ -107,5 +130,19 @@ public class UserDao {
 	}
 	
 	
-	
+	public User getUserByUserName(String name) throws Exception{
+		Connection conn=DbUtil.getConnection();
+		String sql="select * from users where user_name=?";
+		PreparedStatement ptmt=conn.prepareStatement(sql);
+		ptmt.setString(1, name);
+		ResultSet rs= ptmt.executeQuery();
+		User user=null;
+		if(rs.next()){
+			user=new User();
+			user.setUserName(rs.getString("user_name"));
+			user.setUserType(Integer.parseInt(rs.getString("user_type")));
+			
+		}
+		return user;
+	}
 }

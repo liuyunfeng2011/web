@@ -11,6 +11,7 @@ import java.sql.Statement;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +28,7 @@ public class LoginServlet extends HttpServlet {
 		// 接受前端请求
 		String name = req.getParameter("uName");// ""
 		String pwd = req.getParameter("uPwd");
+		String r1=req.getParameter("remeberMe");
 		// 1:连接数据库
 		// 获得驱动
 		Connection conn = null;
@@ -59,12 +61,19 @@ public class LoginServlet extends HttpServlet {
 					//禁止登录
 					out.print("0");
 				}else{
-					//登录成功
 					out.print("1");
 					//保存用户状态
 					HttpSession session=req.getSession();
 					//session.setMaxInactiveInterval(2*60*60);
 					session.setAttribute("user", user);
+					//登录成功
+					if(r1.equals("true")){
+						//加密
+						Cookie cookie = new Cookie("uName", name);
+						cookie.setPath(req.getContextPath()+"/");
+						cookie.setMaxAge(7*24*60*60);
+						resp.addCookie(cookie);
+					}
 				}
 			}else{
 				//帐户名/密码错误

@@ -7,16 +7,30 @@
 <body>
 		username:<input type="text" id="uName"/><br/>
 		pwd:<input type="password" id="uPwd" /><br/>
+		<input type="checkbox" id="remeberMe" />自动登录<br/>
 		<button id="loginBtn">点击登录</button><span id="loginMsg"></span>
 		<script type="text/javascript" src="js/jquery/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript">
+		$(function(){
+			//判断是否有cookie存在自动登录信息
+			$.ajax({
+				type: "get",
+				url:"users/autoLogin",
+				success:function(msg){
+					if(msg=="1"){
+						window.location.href='main.html'
+					}
+				}
+			})
+		})
 			$("#loginBtn").click(function(){
 				var uName=$("#uName").val()
 				var uPwd=$("#uPwd").val()
+				var remeberMe=$("#remeberMe").prop("checked")
 				$.ajax({
 					   type: "POST",
 					   url: "user/login",
-					   data: "uName="+uName+"&uPwd="+uPwd,
+					   data: "uName="+uName+"&uPwd="+uPwd+"&remeberMe="+remeberMe,
 					   success: function(data){
 					     	if(data=='3'){
 					     		$("#loginMsg").text("账户/密码错误 请重试")

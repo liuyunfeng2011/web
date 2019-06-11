@@ -23,6 +23,7 @@
 	<span id="pageTab"></span><button id="nextPagBtn">下一页</button>
 	<input type="text" id="pageInput"><button id="serchBtn">点击</button>
 	<button id="lastPagBtn">尾页</button><button id="delUsersBtn">删除</button>
+	<button id="test">test</button>
 </div>
 	<script type="text/javascript" src="js/jquery/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript">
@@ -31,6 +32,11 @@
 		$(function(){
 			getPageCount();
 			findUserByPage(1)
+		})
+		$("#test").on("click",function(){
+		//	var $tchild=$("#userInfo").children().children()
+		//	alert($tchild.size())
+		$("#pageTab").empty()
 		})
 		$("#checkAll").on("click",function(){
 			var flag=$(this).prop("checked")
@@ -73,9 +79,28 @@
 						arr[index]=value
 						index++
 					}
-					
 				})
-				alert(arr)
+				$.ajax({
+					type:"post",
+					url:"users/delUsers",
+					data:"usersId="+arr,
+					success:function(msg){
+						if(msg=="-100"){
+						}else if(msg=="1"){
+							loadUserByPage(pageNowNum)
+							
+						}
+					}
+				})
+				var $tchild=$("#userInfo").children().children()
+				alert($tchild.size())
+				if($tchild.size()==1){
+					alert("hello")
+					//重新创建分页按钮
+					$("#pageTab").empty()
+					getPageCount();
+					//重新加载页面数据
+				}
 		})
 		
 		
@@ -138,38 +163,44 @@
 		function findUserByPage(pageNow){
 			if(pageNowNum!=pageNow){
 				pageNowNum=pageNow
-				$.ajax({
-					type:"get",
-					url:"users/findUserByPage",
-					data:"pageNow="+pageNow,
-					success:function(data){
-						$("#userInfo tr:gt(0)").remove()
-						//清空原来表格中的数据
-						//var result=$.parseJSON(data)
-						//alert(result.pageCount)
-						//alert(result.users)
-						var users=$.parseJSON(data)
-						var uTr=""
-						for(var i=0;i<users.length;i++){
-							var uTd="<tr><td><input type='checkbox' value='"+users[i].userId+"' class='userCheckBox'/></td><td>"+(i+1)+"</td><td>"+users[i].userName+"</td>"
-							+"<td>"+users[i].userInfo.nickName+"</td><td>"+users[i].userInfo.phone+"</td>"
-							+"<td>"+users[i].userInfo.email+"</td><td>"+users[i].userInfo.gender+"</td>"
-							+"<td>"+users[i].userInfo.address+"</td><td><button class='delUser' >删除</button><button class='disUser' >禁用</button></td></tr>"
-							uTr+=uTd
-						}
-						$("#userInfo").append(uTr)
-					}
-				})
+				loadUserByPage(pageNow)
 			}
 			
 		}
+		
+		function loadUserByPage(pageNow){
+			$.ajax({
+				type:"get",
+				url:"users/findUserByPage",
+				data:"pageNow="+pageNow,
+				success:function(data){
+					$("#userInfo tr:gt(0)").remove()
+					//清空原来表格中的数据
+					//var result=$.parseJSON(data)
+					//alert(result.pageCount)
+					//alert(result.users)
+					var users=$.parseJSON(data)
+					var uTr=""
+					for(var i=0;i<users.length;i++){
+						var uTd="<tr><td><input type='checkbox' value='"+users[i].userId+"' class='userCheckBox'/></td><td>"+(i+1)+"</td><td>"+users[i].userName+"</td>"
+						+"<td>"+users[i].userInfo.nickName+"</td><td>"+users[i].userInfo.phone+"</td>"
+						+"<td>"+users[i].userInfo.email+"</td><td>"+users[i].userInfo.gender+"</td>"
+						+"<td>"+users[i].userInfo.address+"</td><td><button class='delUser' >删除</button><button class='disUser' >禁用</button></td></tr>"
+						uTr+=uTd
+					}
+					$("#userInfo").append(uTr)
+				}
+			})
+		}
 		$(".delUser").live("click",function(){
+			var arr=[]
 			var id=$(this).parent().parent().children().first().children().first().val()
+			arr[0]=id
 			var $delTr=$(this).parent().parent()
 			$.ajax({
 				type:"post",
-				url:"users/delUser",
-				data:"userId="+id,
+				url:"users/delUsers",
+				data:"usersId="+arr,
 				success:function(msg){
 					if(msg=="-100"){
 						//服务器错误

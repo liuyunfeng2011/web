@@ -6,10 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.omg.IOP.ServiceContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gezhi.dao.UserDao;
@@ -31,7 +36,61 @@ public class UserServlet extends HttpServlet{
 		}else if("delete".equals(path)){
 			//删除用户
 			out.println("delete user++++");
-		}else if("getPhone".equals(path)){
+		}else if("autoLogin".equals(path)){
+			//判断自动登录
+			 Cookie cookies[]= req.getCookies();
+			 for(Cookie cookie:cookies){
+					System.out.println(cookie.getName());
+					System.out.println(cookie.getValue());
+					if(cookie.getName().equals("uName")){
+						String name=cookie.getValue();
+						//1用户登录过 2用户选择了记住 我
+						//让用户登录 并且跳转到主页
+						//保存用户状态
+						HttpSession session=req.getSession();
+						//session.setMaxInactiveInterval(2*60*60);
+						//用户名 通过用户名查询用户
+						try {
+							User user= dao.getUserByUserName(name);
+							if(user!=null){
+								if(user.getUserType()!=0){
+									session.setAttribute("user", user);
+									out.print("1");
+								}else{
+									//禁用
+									out.print("2");
+								}
+								
+							}else{
+								//账号异常 重新登录
+								out.print("3");
+							}
+							
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							out.print("-1");
+						}
+						
+					}
+				}
+		}
+		
+		else if("delUsers".equals(path)){
+			
+			//批量删除用户
+				//1:接受参数
+			String[] ids=req.getParameterValues("usersId");
+			try {
+				dao.delUsersById(ids);
+				out.print("1");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				out.print("-100");
+			}
+		}
+		else if("getPhone".equals(path)){
 			//获取用户电话
 			out.println("getPhone user++++");
 		}else if("getPageCount".equals(path)){
@@ -75,6 +134,19 @@ public class UserServlet extends HttpServlet{
 				//执行异常
 				out.print("-100");
 			}
+		}else if("shopCar".equals(path)){
+			Cookie cookie=new Cookie("bookId", "1&2&3&4&5");
+			cookie.setMaxAge(7*24*60*60);
+			resp.addCookie(cookie);
+		}
+		else if("getCookie".equals(path)){
+			Cookie[] cookies= req.getCookies();
+			System.out.println(cookies.length);
+			
+		}
+		else if("test".equals(path)){
+			//重定向   当前地址url重定向到一个新的地方
+			req.getRequestDispatcher("findUserByPage").forward(req, resp);
 		}
 		
 	}
