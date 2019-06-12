@@ -1,0 +1,143 @@
+﻿JSP (Java Server Pages)
+由HTML语句和嵌套在其中的Java代码组成的一个普通文本文件 JSP页面的扩展名必须为.jsp    
+	1:在HTML中嵌入Java脚本代码
+	2:由应用服务器中的JSP引擎来编译和执行嵌入的Java脚本代码
+	3:然后将生成的整个页面信息返回给客户端
+
+
+Servlet的缺陷 
+	Servlet的编码、部署和调试任务繁琐
+	生成动态网页繁琐，不利于项目分工
+采用JSP技术编写动态页面  
+	由HTML语句和嵌套在其中的Java代码组成的一个普通文本文件 
+	JSP页面的扩展名必须为.jsp 
+
+Web容器第一次接收到对某个JSP页面的请求后，首先自动将该JSP页面翻译为Servlet代码 
+在JSP生命周期中，整个翻译和编译步骤只发生一次 
+Web容器第一次接收到对某个JSP页面的请求后，首先自动将该JSP页面翻译为Servlet代码 
+HelloWord.jsp----HelloWord_jsp.java
+
+Web容器负责将Servlet代码编译为字节码。与源文件放在同一个目录下
+
+Web容器装载新生成的servlet类 
+Web容器创建servlet实例 
+Web容器调用Servlet示例的jspInit()方法，JSP页面装载资源 
+容器创建一个新线程来处理这个客户的请求 
+servlet对象的_jspService()方法运行 
+容器调用生成的servlet对象的jspDestroy()方法，销毁装载的资源 
+
+
+生命周期
+由JSP引擎将JSP页面翻译成JAVA代码
+将JAVA代码编译成class字节码文件
+加载到容器
+由容器实例化成对象
+
+
+
+
+
+jsp页面元素包括:
+静态html
+指令<%@ %>--这样      
+表达式<%= 表达式%>    
+脚本<%java code%>	
+申明<%!java function%>
+注释<!--注释语句-->
+
+
+案例1
+查看page指令--jsp中查看
+在jsp中使用小脚本
+案例1：
+ <%
+   	for(int i=0;i<10;i++){
+   		out.print("<h1>"+i+"</h1>");
+   	}
+    %>
+在jsp中使用表达式
+ <%
+   	for(int i=0;i<10;i++){
+   	%>
+   	<h1 style="color: red"><%=i %></h1>
+   	<% 
+   	}
+    %>
+在jsp中申明方法，在后边调用
+
+在JSP中，有三种类型的指令
+page指令为当前页面提供处理指令
+include指令用于把另一个文件包含在JSP中
+taglib指令指定如何包含和访问自定义标签库   
+
+1：
+page指令
+通过设置内部的多个属性来定义整个页面的属性
+语法：<%@ page 属性1="属性值" 属性2="属性值1,属性值2"… 属性n="属性值n"%>
+
+常用属性：
+language
+import
+contentType
+注意它的session属性
+注意：isErrorPage 和errorPage的使用以及webxml中的使用
+
+2：
+include指令表示在JSP编译时插入一个包含文本或者代码的文件
+把文件中的文本静态地包含过去 
+
+案例：演示包含jsp文件
+
+taglib以后再讲
+
+5、九大内置对象：
+             四个作用域：
+                 pageContext 页面上下文对象，此对象封装了其他对象的获取方式，当前页(了解)
+                 request 其实就是请求对象，使用方式和Servlet一致
+                 session 其实就是session对象
+                 application 其实就是ServletContext对象
+             两个输出：
+                 out 输出对象
+                 response 输出对象，比resp对象多了缓冲区，效率提高
+             三个打酱油：
+                 page 代表被页面对象
+                 config ServletConfig
+                 exception 异常对象，摒弃了
+
+
+测试配置参数serlvetConfig--配置文件的使用
+
+pageContext的使用
+
+
+访问范围大小
+	pageContext<request<session<ServletContext
+
+活动元素
+转发
+<jsp:forward page=""/>--跳转标签
+
+<jsp:include page="localURL"  flush="true" >
+	<jsp:param name="aaa" value="ff"/>
+</jsp:include>
+
+
+包含页面
+<jsp:include page="index.jsp"> --包含标签(注意和前边的区别)
+	<jsp:param name="pwd" value="admin" />（这里注意Parameter）
+</jsp:include>
+
+
+在指定的范围绑订一个对象
+scope范围pageContext,request,session,servletContext
+<jsp:useBean id="user" scope="request" class="com.pojo.User"></jsp:useBean>
+
+
+依据请求参数给属性赋值。
+jsp:setProperty 
+
+	<jsp:useBean id="user" class="com.pojo.User"></jsp:useBean>
+ 	<jsp:setProperty property="name" value="zhangsan" name="user"/>
+  	<jsp:setProperty property="age" value="18" name="user"/>
+   
+ 	<%=user.getName() %>

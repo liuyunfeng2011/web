@@ -21,7 +21,6 @@ import com.gezhi.dao.UserDao;
 import com.gezhi.pojo.User;
 
 public class UserServlet extends HttpServlet{
-
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -147,6 +146,20 @@ public class UserServlet extends HttpServlet{
 		else if("test".equals(path)){
 			//重定向   当前地址url重定向到一个新的地方
 			req.getRequestDispatcher("findUserByPage").forward(req, resp);
+		}
+		else if("findUserByPage2".equals(path)){
+			req.setCharacterEncoding("utf-8");
+			resp.setCharacterEncoding("utf-8");
+			resp.setContentType("text/html;charset=UTF-8");
+			try {
+				int pageNow=Integer.parseInt(req.getParameter("pageNow"));
+				List<User> users=dao.findUserByPage(pageNow);
+				req.setAttribute("users", users);
+				req.getRequestDispatcher("../userInfo.jsp").forward(req, resp);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 	}
