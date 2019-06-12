@@ -1,0 +1,33 @@
+JSP (Java Server Pages)
+由HTML语句和嵌套在其中的Java代码组成的一个普通文本文件 JSP页面的扩展名必须为.jsp    
+	1:在HTML中嵌入Java脚本代码
+	2:由应用服务器中的JSP引擎来编译和执行嵌入的Java脚本代码
+	3:然后将生成的整个页面信息返回给客户端
+
+jsp页面元素包括:
+静态html
+指令<%@ %>--这样      
+表达式<%= 表达式%>    
+脚本<%java code%>	
+申明<%!java function%>
+注释<!--注释语句-->
+
+
+
+案例1
+查看page指令--jsp中查看
+在jsp中使用小脚本
+案例1：
+ <%
+   	for(int i=0;i<10;i++){
+   		out.print("<h1>"+i+"</h1>");
+   	}
+    %>
+在jsp中使用表达式
+ <%
+   	for(int i=0;i<10;i++){
+   	%>
+   	<h1 style="color: red"><%=i %></h1>
+   	<% 
+   	}
+    %>
