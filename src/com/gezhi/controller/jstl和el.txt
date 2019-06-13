@@ -1,0 +1,146 @@
+﻿
+
+el 表达式是什么? *
+sun 制订的一种用于计算的一种规则，可以给元素赋值，也可以直接输出
+
+
+
+el表达式：
+${el表达式}
+实验1：简单的使用el表达式获取值
+<%request.setAttribute("name","zhangsan"); %>
+${name }//  	${requestScope.name }
+注意他是挨个取值了，范围从小到大，如果指定的话，就明确去找${sessionScope.name}
+
+案例2：从bean对象中取出数据
+		<%
+  		User u=new User();
+  		u.setName("zhangsan");
+  	request.setAttribute("user",u); %>
+  	${user.name}
+	其他方式${user["name"]}
+
+案例3：获取请求参数
+${ param.userName } A jsp-B jsp
+
+案例4:简单计算和判断
+主要为关系，算数，和empty运算 关系运算 
+
+
+
+
+jstl
+jstl 是什么? *
+java standard taglib(java 标准标签库)。
+
+标签--
+sun
+公司制订的一种技术规范，把jsp中的java代码做成html一样。比el表达式，强大很多
+
+需要先引入jar包
+jstl.jar  standard.jar
+
+在页面中引入
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+c:if条件判断的使用
+案例
+<%
+  	User user=new User();
+  	user.setName("zhangsna");
+  	user.setAge(18);
+  	user.setGender(0);
+  	request.setAttribute("user",user);
+  %>
+  姓名:${user.name }年龄${user.age }
+  <c:if test="${user.gender==1}" scope="request" var="gender" >
+  	男
+  </c:if>
+  <c:if test="${!gender}">女</c:if>
+
+
+c:chose 分支判断
+案例:
+<c:choose>
+ 	<c:when test="${user.gender==1}">男</c:when>
+ 	<c:otherwise>女</c:otherwise>
+ </c:choose>
+
+
+
+c:forEach--循环遍历
+
+		<%
+			List<User> list = new ArrayList<User>();
+			User user = null;
+			for (int i = 0; i < 10; i++) {
+				user = new User();
+				user.setName("zhangsan" + i);
+				user.setAge(18 + i);
+				list.add(user);
+			}
+			request.setAttribute("users", list);
+		%>
+
+			<table>
+			<tr>
+				<td>
+					姓名
+				</td>
+				<td>
+					年龄
+				</td>
+			</tr>
+			<c:forEach var="user" items="${users}">
+				<tr>
+					<td>
+						${user.name}
+					</td>
+					<td>
+						${user.age}
+				</tr>
+			</c:forEach>
+		</table>
+
+
+注意在遍历中有<c:forEach var="user" items="${users}" varStatus="status">这样一个东西
+里边存放了遍历的信息主要包含了
+${status.count}  ${status.index}这两个信息
+
+
+jsp:url		当用户禁止 cookie 以后，会自动在地址后面添加 sessionId。当使用绝对路径时，会自动在地址前添加应用名。
+	jsp01文件
+		<%session.setAttribute("name","zhangsan"); %>
+		<a href="<c:url value='/jsp01.jsp'/>">访问jsp01</a>
+	
+	jsp02文件
+		<%=session.getAttribute("name") %>
+
+	注意观察url地址栏以及session
+
+
+
+
+<c:set var="" scope="" value="">绑订一个对象到指定的范围。
+		<c:set var="test" scope="session" value="10"></c:set>
+		<p>${sessionScope.test }</p>
+
+
+c:remove
+
+<c:import url="MyJsp.jsp"></c:import>--用于在运行期间动态导入
+
+<c:redirect url=""> 重定向到另外一个地址。 url 属性指定重定向的地址。
+	<c:set scope="request" var="test" value="hello"></c:set>
+	<c:redirect url="test.jsp"></c:redirect>
+
+	test.jsp
+	<%=request.getAttribute("test") %>
+
+c:catch 错误封装处理--用的比较少
+	<c:catch var="msg">
+			<% int i=1/0;%>
+		</c:catch>
+		
+		${msg }
+

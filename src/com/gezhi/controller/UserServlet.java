@@ -1,5 +1,6 @@
 package com.gezhi.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -14,6 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.omg.IOP.ServiceContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -167,7 +172,37 @@ public class UserServlet extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
-		
+		else if("upload".equals(path)){
+			// 工厂类实例 提供解析
+			DiskFileItemFactory factory = new DiskFileItemFactory();
+			// 解析器
+			ServletFileUpload fileUpload = new ServletFileUpload(factory);
+			fileUpload.setHeaderEncoding("utf-8");
+			try {
+				List<FileItem> items = fileUpload.parseRequest(req);
+				for (int i = 0; i < items.size(); i++) {
+					FileItem item = items.get(i);
+							ServletContext sctx = getServletContext();
+							String path2 = sctx.getRealPath("/upload");  //
+							System.out.println(path2);
+							// 获得文件名
+							String fileName = item.getName();
+							File file = new File(path2 + "\\" + fileName);
+							item.write(file);
+				}
+			} catch ( Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 }
+
+
+
+
+
+
+
+
