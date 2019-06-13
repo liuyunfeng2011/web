@@ -1,12 +1,12 @@
 <%@page import="com.gezhi.pojo.User"%>
 <%@page import="java.util.List"%>
 <%@page import="com.gezhi.dao.UserDao"%>
-<%@ page language="java" contentType="text/html; charset=gb2312"
-    pageEncoding="gb2312"%>
+<%@ page language="java" contentType="text/html; charset=gbk"
+    pageEncoding="gbk"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="Content-Type" content="text/html; charset=gbk">
 <title>Insert title here</title>
 </head>
 <body>
@@ -41,12 +41,19 @@
 				}
 			%></td>
 			<td><%=user.getUserInfo().getAddress() %></td>
-			<td><button>删除</button></td>
+			<td><a href="deleteUserById?id=<%=user.getUserId() %>">删除</a></td>
 		</tr>
 		<%		
 			}
 		%>
 	</table>
-	<button>1</button><button>2</button>
+	<%int size=5;
+	for(int i=0;i<size;i++){
+		%>
+		<a href="findUserByPage2?pageNow=<%=i+1 %>"><%=i+1 %></a>
+		<%
+	}
+	%>
+	
 </body>
 </html>

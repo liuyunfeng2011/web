@@ -1,0 +1,12 @@
+servlet中文乱码处理
+
+如果是post
+设置req.setCharacterEncoding("utf-8");
+
+如果是get，不去修改服务器配置的情况下
+String name=req.getParameter("uName");//接受原始值
+String uName=new String(name.getBytes("iso-8859-1"),"utf-8");
+
+
+数据库乱码
+?useUnicode=true&characterEncoding=UTF-8

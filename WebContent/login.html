@@ -29,7 +29,7 @@
 				var remeberMe=$("#remeberMe").prop("checked")
 				$.ajax({
 					   type: "POST",
-					   url: "user/login",
+					   url: "users/login2",
 					   data: "uName="+uName+"&uPwd="+uPwd+"&remeberMe="+remeberMe,
 					   success: function(data){
 					     	if(data=='3'){

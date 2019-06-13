@@ -24,6 +24,8 @@ public class UserServlet extends HttpServlet{
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		resp.setCharacterEncoding("gbk");
+		req.setCharacterEncoding("gbk");
 		ObjectMapper mapper=new ObjectMapper();
 		UserDao dao=new UserDao();
 		PrintWriter out=resp.getWriter();
@@ -36,43 +38,43 @@ public class UserServlet extends HttpServlet{
 			//删除用户
 			out.println("delete user++++");
 		}else if("autoLogin".equals(path)){
-			//判断自动登录
-			 Cookie cookies[]= req.getCookies();
-			 for(Cookie cookie:cookies){
-					System.out.println(cookie.getName());
-					System.out.println(cookie.getValue());
-					if(cookie.getName().equals("uName")){
-						String name=cookie.getValue();
-						//1用户登录过 2用户选择了记住 我
-						//让用户登录 并且跳转到主页
-						//保存用户状态
-						HttpSession session=req.getSession();
-						//session.setMaxInactiveInterval(2*60*60);
-						//用户名 通过用户名查询用户
-						try {
-							User user= dao.getUserByUserName(name);
-							if(user!=null){
-								if(user.getUserType()!=0){
-									session.setAttribute("user", user);
-									out.print("1");
-								}else{
-									//禁用
-									out.print("2");
-								}
-								
-							}else{
-								//账号异常 重新登录
-								out.print("3");
-							}
-							
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							out.print("-1");
-						}
-						
-					}
-				}
+//			//判断自动登录
+//			 Cookie cookies[]= req.getCookies();
+//			 for(Cookie cookie:cookies){
+//					System.out.println(cookie.getName());
+//					System.out.println(cookie.getValue());
+//					if(cookie.getName().equals("uName")){
+//						String name=cookie.getValue();
+//						//1用户登录过 2用户选择了记住 我
+//						//让用户登录 并且跳转到主页
+//						//保存用户状态
+//						HttpSession session=req.getSession();
+//						//session.setMaxInactiveInterval(2*60*60);
+//						//用户名 通过用户名查询用户
+//						try {
+//							User user= dao.getUserByUserName(name);
+//							if(user!=null){
+//								if(user.getUserType()!=0){
+//									session.setAttribute("user", user);
+//									out.print("1");
+//								}else{
+//									//禁用
+//									out.print("2");
+//								}
+//								
+//							}else{
+//								//账号异常 重新登录
+//								out.print("3");
+//							}
+//							
+//						} catch (Exception e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//							out.print("-1");
+//						}
+//						
+//					}
+//				}
 		}
 		
 		else if("delUsers".equals(path)){
@@ -143,14 +145,18 @@ public class UserServlet extends HttpServlet{
 			System.out.println(cookies.length);
 			
 		}
+		else if("login2".equals(path)){
+			//ajax servlet 
+			String name=req.getParameter("uName");
+			//浏览器地址栏 默认编码 iso-8859-1   gbk
+			String uName=new String(name.getBytes("iso-8859-1"),"gbk");
+			System.out.println(uName);
+		}
 		else if("test".equals(path)){
 			//重定向   当前地址url重定向到一个新的地方
 			req.getRequestDispatcher("findUserByPage").forward(req, resp);
 		}
 		else if("findUserByPage2".equals(path)){
-			req.setCharacterEncoding("utf-8");
-			resp.setCharacterEncoding("utf-8");
-			resp.setContentType("text/html;charset=UTF-8");
 			try {
 				int pageNow=Integer.parseInt(req.getParameter("pageNow"));
 				List<User> users=dao.findUserByPage(pageNow);

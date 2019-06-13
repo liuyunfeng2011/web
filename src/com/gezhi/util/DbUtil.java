@@ -16,7 +16,7 @@ public class DbUtil {
 	// 2£º¹Ø±Õconnection
 	public static Connection getConnection() throws Exception {
 		Connection conn = null;
-		String url = "jdbc:mysql://127.0.0.1:3306/tb40";
+		String url = "jdbc:mysql://127.0.0.1:3306/tb40?useUnicode=true&characterEncoding=UTF-8";
 		Class.forName("com.mysql.jdbc.Driver");
 		conn=DriverManager.getConnection(url,"root","admin");
 		return conn;
